@@ -108,7 +108,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Error creating person:', error)
     return NextResponse.json(
-      { error: 'Failed to create person', details: error.message },
+      { error: 'Failed to create person', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
     )
   }
