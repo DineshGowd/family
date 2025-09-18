@@ -192,6 +192,11 @@ export function FamilyTreeView() {
   if (isMobile || forceMobileView) {
     return (
       <>
+        {/* Mobile Debug Indicator */}
+        <div className="fixed top-2 left-2 bg-green-500 text-white px-2 py-1 rounded text-xs z-50">
+          📱 Mobile Mode Active
+        </div>
+
         <MobileTreeView
           people={people}
           onPersonClick={(person) => {
@@ -268,7 +273,7 @@ export function FamilyTreeView() {
           <>
             <div className="absolute top-0 left-1/2 transform -translate-x-1/2 z-10 bg-blue-50 border border-blue-200 rounded-lg p-4 max-w-md">
               <div className="text-center">
-                <p className="text-blue-800 font-medium mb-1">🌳 Family Tree View</p>
+                <p className="text-blue-800 font-medium mb-1">🌳 Family View</p>
                 <p className="text-blue-600 text-sm">
                   Interactive family tree with proper parent-child relationships
                 </p>
@@ -296,7 +301,7 @@ export function FamilyTreeView() {
       <div className="absolute top-4 right-4 bg-white rounded-lg shadow-md max-w-xs">
         {/* Panel Header with Toggle */}
         <div className="flex items-center justify-between p-3 pb-2">
-          <div className="text-sm font-semibold text-gray-800">Family Tree</div>
+          <div className="text-sm font-semibold text-gray-800">Info</div>
           <button
             onClick={() => setIsControlPanelMinimized(!isControlPanelMinimized)}
             className="p-1 hover:bg-gray-100 rounded transition-colors"

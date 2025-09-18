@@ -14,7 +14,7 @@ export function Header() {
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center space-x-3">
             <Users className="h-8 w-8 text-blue-600" />
-            <h1 className="text-2xl font-bold text-gray-900">Family Tree</h1>
+            <h1 className="text-2xl font-bold text-gray-900">Family</h1>
           </div>
           
           <Button 
