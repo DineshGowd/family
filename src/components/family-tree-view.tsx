@@ -193,10 +193,6 @@ export function FamilyTreeView() {
     return (
       <>
         {/* Mobile Debug Indicator */}
-        <div className="fixed top-2 left-2 bg-green-500 text-white px-2 py-1 rounded text-xs z-50">
-          📱 Mobile Mode Active
-        </div>
-
         <MobileTreeView
           people={people}
           onPersonClick={(person) => {
