@@ -1,11 +1,7 @@
 {
   "buildCommand": "npm run build",
   "installCommand": "npm install && npx prisma generate",
-  "functions": {
-    "app/**/*.js": {
-      "runtime": "nodejs22.x"
-    }
-  },
+
   "env": {
     "PRISMA_GENERATE_SKIP_AUTOINSTALL": "true"
   }
