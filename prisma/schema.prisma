@@ -1,0 +1,63 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Person {
+  id          String   @id @default(cuid())
+  firstName   String
+  lastName    String?
+  birthDate   DateTime?
+  deathDate   DateTime?
+  gender      String?
+  bio         String?
+  imageUrl    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Parent-child relationships
+  parentRelations Relationship[] @relation("ParentRelation")
+  childRelations  Relationship[] @relation("ChildRelation")
+
+  // Spouse relationships
+  spouseRelations1 SpouseRelation[] @relation("Spouse1")
+  spouseRelations2 SpouseRelation[] @relation("Spouse2")
+
+  @@map("people")
+}
+
+model Relationship {
+  id       String           @id @default(cuid())
+  parentId String
+  childId  String
+  type     String @default("BIOLOGICAL")
+
+  parent Person @relation("ParentRelation", fields: [parentId], references: [id], onDelete: Cascade)
+  child  Person @relation("ChildRelation", fields: [childId], references: [id], onDelete: Cascade)
+
+  @@unique([parentId, childId])
+  @@map("relationships")
+}
+
+model SpouseRelation {
+  id        String    @id @default(cuid())
+  spouse1Id String
+  spouse2Id String
+  startDate DateTime?
+  endDate   DateTime?
+  type      String @default("MARRIED")
+
+  spouse1 Person @relation("Spouse1", fields: [spouse1Id], references: [id], onDelete: Cascade)
+  spouse2 Person @relation("Spouse2", fields: [spouse2Id], references: [id], onDelete: Cascade)
+
+  @@unique([spouse1Id, spouse2Id])
+  @@map("spouse_relations")
+}
+
