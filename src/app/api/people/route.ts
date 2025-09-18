@@ -27,11 +27,11 @@ export async function GET() {
       ...person,
       // childRelations contains the relationships where this person is the child
       childRelations: person.childRelations.filter(rel => 
-        rel.parent && rel.parent.id !== person.id
+        (rel as any).parent && (rel as any).parent.id !== person.id
       ),
       // parentRelations contains the relationships where this person is the parent
       parentRelations: person.parentRelations.filter(rel => 
-        rel.child && rel.child.id !== person.id
+        (rel as any).child && (rel as any).child.id !== person.id
       ),
       spouseRelations1: person.spouseRelations1.filter(rel => 
         rel.spouse2 && rel.spouse2.id !== person.id
@@ -43,8 +43,8 @@ export async function GET() {
 
     // Log any self-relationships found and filtered
     people.forEach(person => {
-      const selfChildren = person.childRelations.filter(rel => rel.parent && rel.parent.id === person.id)
-      const selfParents = person.parentRelations.filter(rel => rel.child && rel.child.id === person.id)
+      const selfChildren = person.childRelations.filter(rel => (rel as any).parent && (rel as any).parent.id === person.id)
+      const selfParents = person.parentRelations.filter(rel => (rel as any).child && (rel as any).child.id === person.id)
       const selfSpouses1 = person.spouseRelations1.filter(rel => rel.spouse2 && rel.spouse2.id === person.id)
       const selfSpouses2 = person.spouseRelations2.filter(rel => rel.spouse1 && rel.spouse1.id === person.id)
       

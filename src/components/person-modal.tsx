@@ -57,7 +57,7 @@ export function PersonModal({ open, onOpenChange, person, mode }: PersonModalPro
     },
     enabled: open && mode === 'edit' && !!person,
     staleTime: 0, // Always consider data stale
-    cacheTime: 0, // Don't cache data
+    gcTime: 0, // Don't cache data
   })
 
   // Force refetch when modal opens

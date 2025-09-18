@@ -201,10 +201,10 @@ export function RelationshipManager({ person }: RelationshipManagerProps) {
   const availablePeople = allPeople.filter(p => p.id !== person.id)
 
   // Get current parents (this person is the CHILD in these relations)
-  const currentParents = person.childRelations.map(rel => rel.parent)
+  const currentParents = person.childRelations.map(rel => (rel as any).parent).filter(Boolean)
 
   // Get current children (this person is the PARENT in these relations)
-  const currentChildren = person.parentRelations.map(rel => rel.child)
+  const currentChildren = person.parentRelations.map(rel => (rel as any).child).filter(Boolean)
 
   // Debug: Log current children
   useEffect(() => {

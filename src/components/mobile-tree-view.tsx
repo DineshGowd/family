@@ -21,23 +21,24 @@ export function MobileTreeView({ people, onPersonClick }: MobileTreeViewProps) {
 
     const getChildren = (parentIds: string[]) => {
       return people.filter(person => {
-        const personParentIds = person.childRelations.map(rel => rel.parent?.id).filter(Boolean)
+        const personParentIds = person.childRelations.map(rel => rel.parentId)
         return parentIds.some(parentId => personParentIds.includes(parentId))
       })
     }
 
     const getSpouse = (person: PersonWithRelations) => {
-      return [
-        ...person.spouseRelations1.map(rel => rel.spouse2),
-        ...person.spouseRelations2.map(rel => rel.spouse1)
-      ][0]
+      const spouseIds = [
+        ...person.spouseRelations1.map(rel => rel.spouse2.id),
+        ...person.spouseRelations2.map(rel => rel.spouse1.id)
+      ]
+      return people.find(p => spouseIds.includes(p.id))
     }
 
     const renderPerson = (person: PersonWithRelations, level: number = 0): JSX.Element => {
       const spouse = getSpouse(person)
       const children = spouse
         ? getChildren([person.id, spouse.id]).filter(child => {
-          const childParentIds = child.childRelations.map(rel => rel.parent?.id).filter(Boolean)
+          const childParentIds = child.childRelations.map(rel => rel.parentId)
           return childParentIds.includes(person.id) && childParentIds.includes(spouse.id)
         })
         : getChildren([person.id])

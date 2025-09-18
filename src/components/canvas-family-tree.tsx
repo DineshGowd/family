@@ -65,7 +65,7 @@ export function CanvasFamilyTree({ people, onPersonClick }: CanvasFamilyTreeProp
       const children = people.filter(child => {
         if (processedIds.has(child.id)) return false
         return child.parentRelations.some((rel: any) => 
-          rel.parent?.id === person.id || (spouse && rel.parent?.id === spouse.id)
+          (rel as any).parent?.id === person.id || (spouse && (rel as any).parent?.id === spouse.id)
         )
       })
       .sort((a, b) => {

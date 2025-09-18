@@ -55,8 +55,8 @@ const DebugInfoSection = ({ people, treeData }: { people: any[], treeData: any[]
           <div className="p-2">
             {(() => {
               const rootPeople = people.filter(p => p.childRelations.length === 0)
-              const middleGen = people.filter(p => p.childRelations.length > 0 && people.some(child => child.childRelations.some(rel => rel.parent?.id === p.id)))
-              const youngGen = people.filter(p => p.childRelations.length > 0 && !people.some(child => child.childRelations.some(rel => rel.parent?.id === p.id)))
+              const middleGen = people.filter(p => p.childRelations.length > 0 && p.parentRelations.length > 0)
+              const youngGen = people.filter(p => p.childRelations.length > 0 && p.parentRelations.length === 0)
 
               return (
                 <div className="space-y-1">
@@ -251,7 +251,7 @@ export function FamilyTreeView() {
                         Parents: {person.childRelations.length}
                       </p>
                       <p className="text-xs text-gray-500">
-                        Children: {people.filter(p => p.childRelations.some(rel => rel.parent?.id === person.id)).length}
+                        Children: {person.parentRelations.length}
                       </p>
                       <p className="text-xs text-gray-500">
                         Spouses: {person.spouseRelations1.length + person.spouseRelations2.length}
@@ -377,8 +377,8 @@ export function FamilyTreeView() {
                       console.log('People with relationships:')
                       people?.forEach(person => {
                         console.log(`\n${person.firstName} ${person.lastName} (ID: ${person.id}):`)
-                        console.log('  - Parents:', person.parentRelations.map(rel => rel.parent ? `${rel.parent.firstName} ${rel.parent.lastName} (${rel.parent.id})` : 'Unknown'))
-                        console.log('  - Children:', people?.filter(p => p.parentRelations.some(rel => rel.parent?.id === person.id)).map(c => `${c.firstName} ${c.lastName} (${c.id})`))
+                        console.log('  - Parents:', person.childRelations.map(rel => (rel as any).parent ? `${(rel as any).parent.firstName} ${(rel as any).parent.lastName} (${(rel as any).parent.id})` : 'Unknown'))
+                        console.log('  - Children:', person.parentRelations.map(rel => (rel as any).child ? `${(rel as any).child.firstName} ${(rel as any).child.lastName} (${(rel as any).child.id})` : 'Unknown'))
                         console.log('  - Spouses:', [
                           ...person.spouseRelations1.map(rel => `${rel.spouse2.firstName} ${rel.spouse2.lastName} (${rel.spouse2.id})`),
                           ...person.spouseRelations2.map(rel => `${rel.spouse1.firstName} ${rel.spouse1.lastName} (${rel.spouse1.id})`)

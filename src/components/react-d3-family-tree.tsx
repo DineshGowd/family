@@ -88,6 +88,7 @@ export function ReactD3FamilyTree({ people, onPersonClick }: ReactD3FamilyTreePr
       name: `${a.firstName} & ${b.firstName}`,
       attributes: {
         id: `marriage_${canonicalMarriageId(a.id, b.id)}`,
+        firstName: `${a.firstName} & ${b.firstName}`,
         isMarriageUnit: true,
         marriageLabel: 'Married',
         spouse1: {
@@ -114,11 +115,11 @@ export function ReactD3FamilyTree({ people, onPersonClick }: ReactD3FamilyTreePr
 
     // Determine children for each parent or marriage
     const childrenOfPerson = (parentId: string) =>
-      people.filter(ch => ch.childRelations.some(rel => rel.parent?.id === parentId))
+      people.filter(ch => ch.childRelations.some(rel => rel.parentId === parentId))
 
     const childrenOfMarriage = (aId: string, bId: string) =>
       people.filter(ch => {
-        const parentIds = ch.childRelations.map(rel => rel.parent?.id).filter(Boolean) as string[]
+        const parentIds = ch.childRelations.map(rel => rel.parentId)
         return parentIds.includes(aId) && parentIds.includes(bId)
       })
 
@@ -486,42 +487,7 @@ export function ReactD3FamilyTree({ people, onPersonClick }: ReactD3FamilyTreePr
         collapsible={false}
         initialDepth={undefined}
         depthFactor={180}
-        styles={{
-          links: {
-            stroke: '#6b7280',
-            strokeWidth: 2,
-          },
-          nodes: {
-            node: {
-              circle: {
-                fill: 'transparent',
-                stroke: 'transparent',
-              },
-              name: {
-                stroke: 'transparent',
-                fill: 'transparent',
-              },
-              attributes: {
-                stroke: 'transparent',
-                fill: 'transparent',
-              },
-            },
-            leafNode: {
-              circle: {
-                fill: 'transparent',
-                stroke: 'transparent',
-              },
-              name: {
-                stroke: 'transparent',
-                fill: 'transparent',
-              },
-              attributes: {
-                stroke: 'transparent',
-                fill: 'transparent',
-              },
-            },
-          },
-        }}
+
       />
     </div>
   )
