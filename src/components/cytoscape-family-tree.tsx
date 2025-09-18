@@ -25,10 +25,10 @@ export function CytoscapeFamilyTree({ people, onPersonClick }: CytoscapeFamilyTr
           import('cytoscape'),
           import('cytoscape-dagre')
         ])
-        
+
         cytoscape = cytoscapeModule.default
         dagre = dagreModule.default
-        
+
         // Register the dagre layout
         cytoscape.use(dagre)
         setIsLoading(false)
@@ -127,7 +127,7 @@ export function CytoscapeFamilyTree({ people, onPersonClick }: CytoscapeFamilyTr
     // Create new cytoscape instance
     cyRef.current = cytoscape({
       container: containerRef.current,
-      
+
       elements: [...nodes, ...edges],
 
       style: [
@@ -218,7 +218,7 @@ export function CytoscapeFamilyTree({ people, onPersonClick }: CytoscapeFamilyTr
       userPanningEnabled: true,
       boxSelectionEnabled: false,
       selectionType: 'single',
-      
+
       // Viewport settings
       minZoom: 0.1,
       maxZoom: 3,
@@ -237,13 +237,13 @@ export function CytoscapeFamilyTree({ people, onPersonClick }: CytoscapeFamilyTr
     cyRef.current.on('mouseover', 'node[type="person"]', (event: any) => {
       const node = event.target
       const person = node.data('person')
-      
+
       // Show tooltip
       const tooltip = document.createElement('div')
       tooltip.className = 'absolute bg-black text-white text-xs rounded px-2 py-1 pointer-events-none z-50'
       tooltip.style.left = event.renderedPosition.x + 'px'
       tooltip.style.top = (event.renderedPosition.y - 30) + 'px'
-      
+
       const birthYear = person.birthDate ? new Date(person.birthDate).getFullYear() : '?'
       const deathYear = person.deathDate ? ` - ${new Date(person.deathDate).getFullYear()}` : ''
       tooltip.innerHTML = `
@@ -251,9 +251,9 @@ export function CytoscapeFamilyTree({ people, onPersonClick }: CytoscapeFamilyTr
         <div>Born: ${birthYear}${deathYear}</div>
         <div>Click to edit</div>
       `
-      
+
       containerRef.current?.appendChild(tooltip)
-      
+
       // Store tooltip reference
       node.data('tooltip', tooltip)
     })
@@ -328,12 +328,12 @@ export function CytoscapeFamilyTree({ people, onPersonClick }: CytoscapeFamilyTr
   return (
     <div className="relative w-full h-full">
       {/* Graph container */}
-      <div 
-        ref={containerRef} 
+      <div
+        ref={containerRef}
         className="w-full h-full"
         style={{ minHeight: '500px' }}
       />
-      
+
       {/* Controls */}
       <div className="absolute top-4 left-4 bg-white rounded-lg shadow-md p-2 space-y-2 z-10">
         <button
@@ -363,23 +363,47 @@ export function CytoscapeFamilyTree({ people, onPersonClick }: CytoscapeFamilyTr
       </div>
 
       {/* Legend */}
-      <div className="absolute top-4 right-4 bg-white rounded-lg shadow-md p-3 space-y-2 z-10">
+      <div className="absolute top-4 right-4 bg-white rounded-lg shadow-md p-3 space-y-3 z-10">
         <div className="text-sm font-semibold text-gray-800 mb-2">Legend</div>
-        <div className="flex items-center space-x-2 text-xs">
-          <div className="w-4 h-3 bg-blue-100 border-2 border-blue-500 rounded"></div>
-          <span>Male</span>
+
+        {/* Person nodes */}
+        <div className="space-y-2">
+          <div className="flex items-center space-x-2 text-xs">
+            <div className="w-6 h-4 bg-blue-100 border-2 border-blue-500 rounded-sm flex items-center justify-center">
+              <span className="text-[8px] font-bold text-blue-800">M</span>
+            </div>
+            <span className="text-gray-700">Male</span>
+          </div>
+          <div className="flex items-center space-x-2 text-xs">
+            <div className="w-6 h-4 bg-pink-100 border-2 border-pink-500 rounded-sm flex items-center justify-center">
+              <span className="text-[8px] font-bold text-pink-800">F</span>
+            </div>
+            <span className="text-gray-700">Female</span>
+          </div>
+          <div className="flex items-center space-x-2 text-xs">
+            <div className="w-6 h-4 bg-gray-100 border-2 border-gray-500 rounded-sm flex items-center justify-center">
+              <span className="text-[8px] font-bold text-gray-800">?</span>
+            </div>
+            <span className="text-gray-700">Unknown</span>
+          </div>
         </div>
-        <div className="flex items-center space-x-2 text-xs">
-          <div className="w-4 h-3 bg-pink-100 border-2 border-pink-500 rounded"></div>
-          <span>Female</span>
-        </div>
-        <div className="flex items-center space-x-2 text-xs">
-          <div className="w-4 h-0.5 bg-pink-500"></div>
-          <span>Marriage</span>
-        </div>
-        <div className="flex items-center space-x-2 text-xs">
-          <div className="w-4 h-0.5 bg-gray-500"></div>
-          <span>Parent-Child</span>
+
+        {/* Divider */}
+        <div className="border-t border-gray-200"></div>
+
+        {/* Relationship lines */}
+        <div className="space-y-2">
+          <div className="flex items-center space-x-2 text-xs">
+            <div className="w-6 h-1 bg-pink-500 rounded-full"></div>
+            <span className="text-gray-700">Marriage</span>
+          </div>
+          <div className="flex items-center space-x-2 text-xs">
+            <div className="relative w-6 h-3 flex items-center">
+              <div className="w-full h-0.5 bg-gray-500"></div>
+              <div className="absolute right-0 w-0 h-0 border-l-2 border-l-gray-500 border-t border-b border-transparent"></div>
+            </div>
+            <span className="text-gray-700">Parent-Child</span>
+          </div>
         </div>
       </div>
 

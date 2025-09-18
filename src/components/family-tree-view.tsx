@@ -106,6 +106,7 @@ export function FamilyTreeView() {
   const [viewMode, setViewMode] = useState<'tree' | 'grid'>('grid')
   const [showDebugPanel, setShowDebugPanel] = useState(false)
   const [isControlPanelMinimized, setIsControlPanelMinimized] = useState(false)
+  const [forceMobileView, setForceMobileView] = useState(false)
 
   useEffect(() => {
     const checkMobile = () => {
@@ -187,8 +188,8 @@ export function FamilyTreeView() {
     )
   }
 
-  // Show mobile view on small screens
-  if (isMobile) {
+  // Show mobile view on small screens or when forced
+  if (isMobile || forceMobileView) {
     return (
       <>
         <MobileTreeView
@@ -343,6 +344,14 @@ export function FamilyTreeView() {
                 className="w-full text-xs bg-gray-600 text-white px-2 py-1 rounded hover:bg-gray-700 transition-colors"
               >
                 {showDebugPanel ? 'Hide Debug' : 'Show Debug'}
+              </button>
+
+              {/* Mobile View Toggle */}
+              <button
+                onClick={() => setForceMobileView(!forceMobileView)}
+                className="w-full text-xs bg-purple-500 text-white px-2 py-1 rounded hover:bg-purple-600 transition-colors"
+              >
+                📱 {forceMobileView ? 'Desktop View' : 'Mobile View'}
               </button>
             </div>
 
