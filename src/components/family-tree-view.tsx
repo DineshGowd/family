@@ -6,7 +6,7 @@ import { PersonWithRelations } from '@/types'
 import { PersonBadge } from '@/components/person-badge'
 import { PersonModal } from '@/components/person-modal'
 import { MobileTreeView } from '@/components/mobile-tree-view'
-import { ReactD3FamilyTree } from '@/components/react-d3-family-tree'
+import  FamilyGraph  from '@/components/FamilyGraph'
 import { Loader2, ChevronDown, ChevronRight, Minimize2, Maximize2 } from 'lucide-react'
 
 // Debug Info Section Component
@@ -275,7 +275,7 @@ export function FamilyTreeView() {
                 </p>
               </div>
             </div>
-            <ReactD3FamilyTree
+            <FamilyGraph
               people={people}
               onPersonClick={(person) => {
                 setSelectedPerson(person)

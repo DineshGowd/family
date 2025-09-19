@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { PersonWithRelations } from '@/types'
 import { PersonBadge } from '@/components/person-badge'
 import { calculateAge } from '@/lib/utils'
-import { ReactD3FamilyTree } from '@/components/react-d3-family-tree'
+import  FamilyGraph  from '@/components/FamilyGraph'
 
 interface MobileTreeViewProps {
   people: PersonWithRelations[]
@@ -218,7 +218,7 @@ export function MobileTreeView({ people, onPersonClick }: MobileTreeViewProps) {
         ) : (
           /* Use Desktop React D3 Tree Component */
           <div className="w-full h-full">
-            <ReactD3FamilyTree
+            <FamilyGraph
               people={people}
               onPersonClick={onPersonClick}
             />
