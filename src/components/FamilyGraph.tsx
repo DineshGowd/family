@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useMemo } from 'react'
+import React, { useMemo, useEffect } from 'react'
 import ReactFlow, {
   Background,
   Controls,
@@ -196,6 +196,23 @@ export default function FamilyGraph({
   people: PersonWithRelations[]
   onPersonClick: (p: PersonWithRelations) => void
 }) {
+  // Disable scrolling on HTML and body when component mounts
+  useEffect(() => {
+    // Store original overflow values
+    const originalHtmlOverflow = document.documentElement.style.overflow
+    const originalBodyOverflow = document.body.style.overflow
+
+    // Disable scrolling
+    document.documentElement.style.overflow = 'hidden'
+    document.body.style.overflow = 'hidden'
+
+    // Cleanup function to restore scrolling when component unmounts
+    return () => {
+      document.documentElement.style.overflow = originalHtmlOverflow
+      document.body.style.overflow = originalBodyOverflow
+    }
+  }, [])
+
   const { nodes, edges } = useMemo(() => {
     if (!people || people.length === 0) return { nodes: [], edges: [] }
 
@@ -228,7 +245,7 @@ export default function FamilyGraph({
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          cursor: 'pointer',
+          cursor: 'grab',
           boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
           transition: 'all 0.2s ease-in-out',
           textAlign: 'center',
@@ -370,42 +387,79 @@ export default function FamilyGraph({
   }, [people, onPersonClick])
 
   return (
-    <div style={{ width: '100%', height: '100vh' }} className="bg-gray-50">
-      <ReactFlow
-        nodes={nodes}
-        edges={edges}
+    <div
+      style={{
+        width: '100%',
+        height: '100%',
+        minHeight: '500px',
+        overflow: 'hidden',
+        position: 'relative',
+        touchAction: 'none'
+      }}
+      className="bg-gray-50"
+      onWheel={(e) => {
+        e.preventDefault()
+        e.stopPropagation()
+      }}
+      onScroll={(e) => {
+        e.preventDefault()
+        e.stopPropagation()
+      }}
+      onTouchMove={(e) => {
+        e.preventDefault()
+        e.stopPropagation()
+      }}
+    >
+      <div style={{ width: '100%', height: '100%' }}>
+        <ReactFlow
+          nodes={nodes}
+          edges={edges}
+          fitView
+          fitViewOptions={{ padding: 0.3, maxZoom: 1.2 }}
+          nodesConnectable={false}
+          elementsSelectable={true}
+          nodesDraggable={true}
+          panOnDrag={[1, 2]}
+          zoomOnScroll={true}
+          preventScrolling={true}
+          zoomOnPinch={false}
+          panOnScroll={false}
+          minZoom={0.2}
+          maxZoom={1.5}
+          defaultViewport={{ x: 0, y: 0, zoom: 0.8 }}
+          onNodeClick={(event, node) => {
+            event.stopPropagation()
+            const person = people.find(p => p.id === node.id)
+            if (person) {
+              console.log('Node clicked via ReactFlow:', person.firstName)
+              onPersonClick(person)
+            }
+          }}
+          style={{ width: '100%', height: '100%' }}
+        >
+          <Background
+            gap={25}
+            size={1}
+            color="#e5e7eb"
+          />
+          <Controls
+            position="top-left"
+            showInteractive={false}
+            showZoom={true}
+            showFitView={true}
+          />
+        </ReactFlow>
+      </div>
 
-        fitView
-        fitViewOptions={{ padding: 0.3, maxZoom: 1.2 }}
-        nodesConnectable={false}
-        elementsSelectable={true}
-        nodesDraggable={false}
-        panOnDrag
-        zoomOnScroll
-        minZoom={0.2}
-        maxZoom={1.5}
-        defaultViewport={{ x: 0, y: 0, zoom: 0.8 }}
-        onNodeClick={(event, node) => {
-          event.stopPropagation()
-          const person = people.find(p => p.id === node.id)
-          if (person) {
-            console.log('Node clicked via ReactFlow:', person.firstName)
-            onPersonClick(person)
-          }
-        }}
-      >
-        <Background
-          gap={25}
-          size={1}
-          color="#e5e7eb"
-        />
-        <Controls
-          position="top-left"
-          showInteractive={false}
-          showZoom={true}
-          showFitView={true}
-        />
-      </ReactFlow>
+      {/* Reset Layout Button */}
+      <div className="absolute bottom-4 right-4 z-10">
+        <button
+          onClick={() => window.location.reload()}
+          className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md font-medium text-sm transition-colors"
+        >
+          🔄 Reset Layout
+        </button>
+      </div>
     </div>
   )
 }
